@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
-
+import Joi from "joi";
 import { ResourcesService } from "../services/resourcesService";
 import { validateJoiSchema } from "../utils/validateJoiSchema";
 import {
@@ -10,16 +10,41 @@ import {
   ResourceIdParam,
   CreateResourceDTO,
   UpdateResourceDTO,
+  createResourceOrBulkSchema,
 } from "../schemas/resourceSchema";
+import { resourceQuerySchema } from "../schemas/resourceQuerySchema";
 
 export class ResourcesController {
   static async getAllResources(
-    _req: Request,
+    req: Request,
     res: Response,
     next: NextFunction,
   ) {
     try {
-      const resources = ResourcesService.getAll();
+      // ✅ validate query params
+      validateJoiSchema({
+        schema: resourceQuerySchema,
+        data: req.query,
+        options: { abortEarly: false },
+      });
+
+      const { search, resourceType, difficulty, tags } = req.query;
+
+      const filters = {
+        search: search?.toString(),
+
+        resourceType: resourceType?.toString(),
+
+        difficulty: difficulty?.toString(),
+
+        tags:
+          typeof tags === "string"
+            ? tags.split(",")
+            : (tags as string[] | undefined),
+      };
+
+      const resources = ResourcesService.getAll(filters);
+
       res.status(200).json(resources);
     } catch (err) {
       next(err);
@@ -32,7 +57,7 @@ export class ResourcesController {
     next: NextFunction,
   ) {
     try {
-      validateJoiSchema<ResourceIdParam>({
+      validateJoiSchema({
         schema: resourceIdSchema,
         data: req.params,
       });
@@ -45,19 +70,26 @@ export class ResourcesController {
   }
 
   static async createResource(
-    req: Request<{}, {}, CreateResourceDTO>,
+    req: Request<{}, {}, CreateResourceDTO | CreateResourceDTO[]>,
     res: Response,
     next: NextFunction,
   ) {
     try {
-      validateJoiSchema<CreateResourceDTO>({
-        schema: createResourceSchema,
+      validateJoiSchema({
+        schema: createResourceOrBulkSchema,
         data: req.body,
         options: { abortEarly: false },
       });
 
-      const resource = ResourcesService.create(req.body);
-      res.status(201).json(resource);
+      // Normalize to array
+      const resources = Array.isArray(req.body) ? req.body : [req.body];
+
+      const created = resources.map((resource) =>
+        ResourcesService.create(resource),
+      );
+
+      // Return single object if single input
+      res.status(201).json(Array.isArray(req.body) ? created : created[0]);
     } catch (err) {
       next(err);
     }
@@ -69,12 +101,12 @@ export class ResourcesController {
     next: NextFunction,
   ) {
     try {
-      validateJoiSchema<ResourceIdParam>({
+      validateJoiSchema({
         schema: resourceIdSchema,
         data: req.params,
       });
 
-      validateJoiSchema<UpdateResourceDTO>({
+      validateJoiSchema({
         schema: updateResourceSchema,
         data: req.body,
         options: { abortEarly: false },
@@ -94,7 +126,7 @@ export class ResourcesController {
     next: NextFunction,
   ) {
     try {
-      validateJoiSchema<ResourceIdParam>({
+      validateJoiSchema({
         schema: resourceIdSchema,
         data: req.params,
       });

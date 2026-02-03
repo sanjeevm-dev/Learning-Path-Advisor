@@ -47,3 +47,8 @@ export const updateResourceSchema: ObjectSchema<UpdateResourceDTO> =
     tags: Joi.array().items(Joi.string()).min(1),
     estimatedMinutes: Joi.number().positive(),
   }).min(1);
+
+export const createResourceOrBulkSchema = Joi.alternatives().try(
+  createResourceSchema,
+  Joi.array().items(createResourceSchema).min(1),
+);

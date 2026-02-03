@@ -1,17 +1,17 @@
-import { ObjectSchema, ValidationOptions } from "joi";
+import { AnySchema, ValidationOptions } from "joi";
 import createHttpError from "http-errors";
 
-interface SchemaValidator<T> {
-  schema: ObjectSchema<T>;
+interface SchemaValidator {
+  schema: AnySchema;
   data: unknown;
   options?: ValidationOptions;
 }
 
-export const validateJoiSchema = <T>({
+export const validateJoiSchema = ({
   schema,
   data,
   options,
-}: SchemaValidator<T>): void => {
+}: SchemaValidator): void => {
   const { error } = schema.validate(data, options);
 
   if (error) {
