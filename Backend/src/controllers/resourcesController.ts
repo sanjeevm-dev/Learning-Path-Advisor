@@ -1,11 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
-import Joi from "joi";
 import { ResourcesService } from "../services/resourcesService";
 import { validateJoiSchema } from "../utils/validateJoiSchema";
 import {
   resourceIdSchema,
-  createResourceSchema,
   updateResourceSchema,
   ResourceIdParam,
   CreateResourceDTO,
@@ -138,9 +136,6 @@ export class ResourcesController {
     }
   }
 
-  /**
-   * Centralized error mapping
-   */
   private static mapError(err: unknown) {
     if (err instanceof Error) {
       if (err.message === "RESOURCE_NOT_FOUND") {

@@ -1,3 +1,4 @@
+// services/aiService.ts
 import { resourceRepository } from "../data/resourceRepository";
 import { AIRecommendRequest } from "../schemas/aiRecommendationSchema";
 import { LearningResource } from "../models/learningResource";
@@ -6,11 +7,15 @@ export class AIService {
   static recommendLearningPath({ goal, maxItems = 5 }: AIRecommendRequest) {
     const keywords = this.extractKeywords(goal);
 
+    const isBeginner = ["beginner", "start", "basics", "intro", "first"].some(
+      (k) => keywords.includes(k),
+    );
+
     const scored = resourceRepository
       .findAll()
       .map((resource) => ({
         resource,
-        score: this.scoreResource(resource, keywords),
+        score: this.scoreResource(resource, keywords, isBeginner),
       }))
       .filter((r) => r.score > 0)
       .sort((a, b) => b.score - a.score)
@@ -24,19 +29,24 @@ export class AIService {
       estimatedMinutes: resource.estimatedMinutes,
     }));
 
+    const totalEstimatedMinutes = resources.reduce(
+      (sum, r) => sum + r.estimatedMinutes,
+      0,
+    );
+
+    const explanation = `Selected ${resources.length} resources based on keyword relevance (${keywords.join(
+      ", ",
+    )})${isBeginner ? ". Prioritized beginner content." : ""}`;
+
     return {
       summary: `Here is a suggested learning path for ${goal}.`,
       resources,
-      totalEstimatedMinutes: resources.reduce(
-        (sum, r) => sum + r.estimatedMinutes,
-        0,
-      ),
-      explanation: `Resources were ranked using keyword relevance (${keywords.join(
-        ", ",
-      )}), with higher weight for tags, titles, and beginner-friendly content.`,
+      totalEstimatedMinutes,
+      explanation,
     };
   }
 
+  // Helper: extract keywords from goal
   private static extractKeywords(goal: string): string[] {
     const stopWords = new Set([
       "i",
@@ -49,41 +59,43 @@ export class AIService {
       "of",
       "for",
       "and",
+      "my",
+      "in",
     ]);
 
     return goal
       .toLowerCase()
-      .split(/\W+/)
+      .replace(/[^\w\s]/g, "") // remove punctuation
+      .split(/\s+/)
       .filter((k) => k.length > 2 && !stopWords.has(k));
   }
 
+  // Helper: score a resource
   private static scoreResource(
     resource: LearningResource,
     keywords: string[],
+    isBeginner: boolean,
   ): number {
     let score = 0;
 
+    const textFields = [
+      resource.title.toLowerCase(),
+      resource.description.toLowerCase(),
+      resource.tags.join(" ").toLowerCase(),
+    ];
+
     for (const keyword of keywords) {
-      if (resource.tags.some((t) => t.toLowerCase() === keyword)) {
-        score += 5; // 🔥 strongest signal
-      }
+      // 🔥 tag matches weighted strongest
+      if (resource.tags.some((t) => t.toLowerCase() === keyword)) score += 5;
 
-      if (resource.title.toLowerCase().includes(keyword)) {
-        score += 3;
-      }
+      // title matches
+      if (resource.title.toLowerCase().includes(keyword)) score += 3;
 
-      if (resource.description.toLowerCase().includes(keyword)) {
-        score += 1;
-      }
+      // description matches
+      if (resource.description.toLowerCase().includes(keyword)) score += 1;
     }
 
-    if (
-      score > 0 &&
-      ["beginner", "basics", "start", "intro"].some((k) =>
-        keywords.includes(k),
-      ) &&
-      resource.difficulty.toLowerCase() === "beginner"
-    ) {
+    if (isBeginner && resource.difficulty.toLowerCase() === "beginner") {
       score += 2;
     }
 
