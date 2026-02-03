@@ -1,0 +1,134 @@
+[
+  {
+    "id": "a55d6aaf-a7b1-40a4-8b00-0511aadc0665",
+    "title": "JavaScript Basics",
+    "slug": "javascript-basics",
+    "description": "Learn the fundamentals of JavaScript",
+    "resourceType": "Article",
+    "difficulty": "Beginner",
+    "tags": [
+      "javascript",
+      "basics"
+    ],
+    "estimatedMinutes": 30,
+    "createdAt": "2026-02-03T12:52:53.531Z",
+    "updatedAt": "2026-02-03T12:52:53.531Z"
+  },
+  {
+    "id": "b79c2998-d72c-4ebb-8bb7-b59f7df9b085",
+    "title": "Advanced React Patterns",
+    "slug": "advanced-react-patterns",
+    "description": "Deep dive into advanced React concepts",
+    "resourceType": "Video",
+    "difficulty": "Advanced",
+    "tags": [
+      "react",
+      "patterns"
+    ],
+    "estimatedMinutes": 90,
+    "createdAt": "2026-02-03T12:52:53.531Z",
+    "updatedAt": "2026-02-03T12:52:53.531Z"
+  },
+  {
+    "id": "4548778b-f974-402b-bf91-df7dd739d99f",
+    "createdAt": "2026-02-03T12:53:04.770Z",
+    "updatedAt": "2026-02-03T12:53:04.770Z",
+    "title": "Advanced React Patterns",
+    "slug": "advanced-react-patterns",
+    "description": "Explore advanced design patterns in React to write scalable and maintainable applications.",
+    "resourceType": "Course",
+    "difficulty": "Advanced",
+    "tags": [
+      "react",
+      "frontend",
+      "patterns",
+      "advanced"
+    ],
+    "estimatedMinutes": 120
+  },
+  {
+    "id": "cdaabeae-1815-47fc-a8eb-d64c4154b077",
+    "createdAt": "2026-02-03T12:53:04.773Z",
+    "updatedAt": "2026-02-03T12:53:04.773Z",
+    "title": "REST API Design Principles",
+    "slug": "rest-api-design-principles",
+    "description": "Learn the best practices and standards for designing RESTful APIs, including endpoints, status codes, and versioning.",
+    "resourceType": "Article",
+    "difficulty": "Intermediate",
+    "tags": [
+      "api",
+      "rest",
+      "backend",
+      "design"
+    ],
+    "estimatedMinutes": 30
+  },
+  {
+    "id": "dcc87759-0252-4405-9969-0898ce1f31fc",
+    "createdAt": "2026-02-03T12:53:04.774Z",
+    "updatedAt": "2026-02-03T12:53:04.774Z",
+    "title": "Building a Node.js Server",
+    "slug": "building-a-nodejs-server",
+    "description": "Step by step tutorial on creating a Node.js server, handling requests, middleware, and routing.",
+    "resourceType": "Tutorial",
+    "difficulty": "Beginner",
+    "tags": [
+      "nodejs",
+      "backend",
+      "server",
+      "tutorial"
+    ],
+    "estimatedMinutes": 60
+  },
+  {
+    "id": "3ddac4d6-fd3a-40d4-b917-9f4c3f276927",
+    "createdAt": "2026-02-03T12:53:20.248Z",
+    "updatedAt": "2026-02-03T12:53:20.248Z",
+    "title": "Advanced React Patterns",
+    "slug": "advanced-react-patterns",
+    "description": "Explore advanced design patterns in React to write scalable and maintainable applications.",
+    "resourceType": "Course",
+    "difficulty": "Advanced",
+    "tags": [
+      "react",
+      "frontend",
+      "patterns",
+      "advanced"
+    ],
+    "estimatedMinutes": 120
+  },
+  {
+    "id": "849ff111-d166-45aa-a02e-cb01ff5bcdbc",
+    "createdAt": "2026-02-03T12:53:20.250Z",
+    "updatedAt": "2026-02-03T12:53:20.250Z",
+    "title": "REST API Design Principles",
+    "slug": "rest-api-design-principles",
+    "description": "Learn the best practices and standards for designing RESTful APIs, including endpoints, status codes, and versioning.",
+    "resourceType": "Article",
+    "difficulty": "Intermediate",
+    "tags": [
+      "api",
+      "rest",
+      "backend",
+      "design"
+    ],
+    "estimatedMinutes": 30
+  },
+  {
+    "id": "e594c15f-247d-4a5e-baee-3f47fd9315d9",
+    "createdAt": "2026-02-03T12:53:20.252Z",
+    "updatedAt": "2026-02-03T12:53:20.252Z",
+    "title": "Building a Node.js Server",
+    "slug": "building-a-nodejs-server",
+    "description": "Step by step tutorial on creating a Node.js server, handling requests, middleware, and routing.",
+    "resourceType": "Tutorial",
+    "difficulty": "Beginner",
+    "tags": [
+      "nodejs",
+      "backend",
+      "server",
+      "tutorial"
+    ],
+    "estimatedMinutes": 60
+  }
+]
