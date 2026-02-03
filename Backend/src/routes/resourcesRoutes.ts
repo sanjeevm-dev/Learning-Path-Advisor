@@ -1,8 +1,11 @@
 import { Router } from "express";
 import asyncFunction from "express-async-handler";
 import { ResourcesController } from "../controllers/resourcesController";
+import { AIController } from "../controllers/aiController";
 
 const resourcesApi = Router();
+
+resourcesApi.post("/recommend-path", AIController.recommendPath);
 
 resourcesApi.get(
   "/getAllResources",

@@ -19,9 +19,6 @@ export const resourceQuerySchema = Joi.object({
     .optional(),
 
   tags: Joi.alternatives()
-    .try(
-      Joi.array().items(Joi.string()),
-      Joi.string(), // allow comma-separated
-    )
+    .try(Joi.array().items(Joi.string()), Joi.string())
     .optional(),
 });

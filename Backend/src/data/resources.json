@@ -1,20 +1,5 @@
 [
   {
-    "id": "a55d6aaf-a7b1-40a4-8b00-0511aadc0665",
-    "title": "JavaScript Basics",
-    "slug": "javascript-basics",
-    "description": "Learn the fundamentals of JavaScript",
-    "resourceType": "Article",
-    "difficulty": "Beginner",
-    "tags": [
-      "javascript",
-      "basics"
-    ],
-    "estimatedMinutes": 30,
-    "createdAt": "2026-02-03T12:52:53.531Z",
-    "updatedAt": "2026-02-03T12:52:53.531Z"
-  },
-  {
     "id": "b79c2998-d72c-4ebb-8bb7-b59f7df9b085",
     "title": "Advanced React Patterns",
     "slug": "advanced-react-patterns",
@@ -49,8 +34,8 @@
   {
     "id": "cdaabeae-1815-47fc-a8eb-d64c4154b077",
     "createdAt": "2026-02-03T12:53:04.773Z",
-    "updatedAt": "2026-02-03T12:53:04.773Z",
-    "title": "REST API Design Principles",
+    "updatedAt": "2026-02-03T13:37:25.838Z",
+    "title": "sanjeev",
     "slug": "rest-api-design-principles",
     "description": "Learn the best practices and standards for designing RESTful APIs, including endpoints, status codes, and versioning.",
     "resourceType": "Article",
