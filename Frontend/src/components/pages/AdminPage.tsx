@@ -11,7 +11,7 @@ export default function AdminPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editResource, setEditResource] = useState<Resource | null>(null);
 
-  const { data: resources = [], isLoading } = useResources({ search });
+  const { data: resources = [], isLoading } = useResources({ q: search });
   const deleteMutation = useDeleteResource();
 
   const handleDelete = async (id: string) => {

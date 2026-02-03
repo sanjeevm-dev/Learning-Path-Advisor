@@ -1,14 +1,14 @@
 import Joi from "joi";
 
 export interface ResourceQuery {
-  search?: string;
+  q?: string;
   resourceType?: string;
   difficulty?: string;
-  tags?: string[];
+  tag?: string;
 }
 
-export const resourceQuerySchema = Joi.object({
-  search: Joi.string().trim().min(1).optional(),
+export const resourceQuerySchema = Joi.object<ResourceQuery>({
+  q: Joi.string().trim().min(1).optional(),
 
   resourceType: Joi.string()
     .valid("Article", "Video", "Tutorial", "Course")
@@ -20,7 +20,5 @@ export const resourceQuerySchema = Joi.object({
     .insensitive()
     .optional(),
 
-  tags: Joi.alternatives()
-    .try(Joi.array().items(Joi.string()), Joi.string())
-    .optional(),
+  tag: Joi.string().trim().optional(),
 });

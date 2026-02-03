@@ -8,7 +8,7 @@ import type {
   RecommendationResponse,
 } from "../types/types";
 
-const API_BASE_URL = "http://localhost:9000/api/v1";
+const API_BASE_URL = "http://localhost:9000/api";
 
 // Async thunk for AI recommendation API call
 export const fetchAIRecommendation = createAsyncThunk<
@@ -17,7 +17,7 @@ export const fetchAIRecommendation = createAsyncThunk<
   { rejectValue: string }
 >("ai/fetchRecommendation", async (payload, { rejectWithValue }) => {
   try {
-    const res = await fetch(`${API_BASE_URL}/recommend-path`, {
+    const res = await fetch(`${API_BASE_URL}/ai/recommend-path`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

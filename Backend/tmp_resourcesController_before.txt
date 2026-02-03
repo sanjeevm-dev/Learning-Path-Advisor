@@ -19,24 +19,31 @@ export class ResourcesController {
     next: NextFunction,
   ) {
     try {
+      // ✅ validate query params
       validateJoiSchema({
         schema: resourceQuerySchema,
         data: req.query,
         options: { abortEarly: false },
       });
 
-      const { q, resourceType, difficulty, tag } = req.query;
+      const { search, resourceType, difficulty, tags } = req.query;
 
       const filters = {
-        search: q?.toString(),
+        search: search?.toString(),
+
         resourceType: resourceType?.toString(),
+
         difficulty: difficulty?.toString(),
-        tags: tag ? [tag.toString()] : undefined,
+
+        tags:
+          typeof tags === "string"
+            ? tags.split(",")
+            : (tags as string[] | undefined),
       };
 
       const resources = ResourcesService.getAll(filters);
 
-      res.status(200).json({ items: resources });
+      res.status(200).json(resources);
     } catch (err) {
       next(err);
     }
@@ -138,4 +145,3 @@ export class ResourcesController {
     return err;
   }
 }
-

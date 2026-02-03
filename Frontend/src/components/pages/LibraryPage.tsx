@@ -1,20 +1,7 @@
 import { useState } from "react";
 import { useResources } from "../hooks/use-resources";
 import { DIFFICULTIES, RESOURCE_TYPES } from "../../types/types";
-
-// Simple ResourceCard component
-function ResourceCard({ resource }: { resource: any }) {
-  return (
-    <div className="p-4 border rounded-xl shadow-sm bg-white hover:shadow-md transition-shadow">
-      <h3 className="font-semibold text-lg mb-1">{resource.title}</h3>
-      <p className="text-sm text-gray-600 mb-2">{resource.description}</p>
-      <div className="flex justify-between text-xs text-gray-500">
-        <span>{resource.resourceType}</span>
-        <span>{resource.difficulty}</span>
-      </div>
-    </div>
-  );
-}
+import { ResourceCard } from "../ui/ResourceCard";
 
 // Simple Skeleton component for loading state
 function Skeleton({ className }: { className: string }) {
@@ -25,15 +12,17 @@ export default function LibraryPage() {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("all");
   const [difficulty, setDifficulty] = useState("all");
+  const [tag, setTag] = useState("");
 
   const {
     data: resources = [],
     isLoading,
     error,
   } = useResources({
-    search: search,
+    q: search || undefined,
     resourceType: type !== "all" ? type : undefined,
     difficulty: difficulty !== "all" ? difficulty : undefined,
+    tag: tag || undefined,
   });
 
   return (
@@ -97,6 +86,14 @@ export default function LibraryPage() {
             </option>
           ))}
         </select>
+
+        <input
+          type="text"
+          placeholder="Filter by tag..."
+          value={tag}
+          onChange={(e) => setTag(e.target.value)}
+          className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
       </div>
 
       {/* Results Grid */}

@@ -85,11 +85,11 @@ export default function AdvisorPage() {
                         padding: "0.5rem",
                       }}
                     />
-                    <ErrorMessage
-                      name="goal"
-                      component="div"
-                      style={{ color: "red" }}
-                    />
+                    <ErrorMessage name="goal">
+                      {(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    </ErrorMessage>
                   </div>
 
                   <div>
@@ -108,11 +108,11 @@ export default function AdvisorPage() {
                       }
                       style={{ width: "100%" }}
                     />
-                    <ErrorMessage
-                      name="maxItems"
-                      component="div"
-                      style={{ color: "red" }}
-                    />
+                    <ErrorMessage name="maxItems">
+                      {(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    </ErrorMessage>
                   </div>
 
                   <button

@@ -1,73 +1,70 @@
-# React + TypeScript + Vite
+# Learning Path Advisor Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript + Vite frontend for browsing learning resources and generating AI-style learning paths.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- TypeScript
+- Vite
+- React Router
+- @tanstack/react-query
 
-## React Compiler
+## Running the Frontend
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd Frontend
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The dev server runs on `http://localhost:5173` and expects the backend at `http://localhost:9000`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Features
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Resource Catalogue & Filters
+
+- Fetches data from `GET /api/resources` via `useResources` hook.
+- Filters:
+  - Text input for `q` (search across title and description).
+  - Dropdowns for `resourceType` and `difficulty`.
+  - Free-text tag filter mapped to `tag` query param.
+- Displays each resource using `ResourceCard` with:
+  - title
+  - resourceType
+  - difficulty
+  - estimatedMinutes
+
+### Resource Detail View
+
+- Route: `/resources/:id`.
+- Uses `useResource` hook (calling `GET /api/resources/:id`).
+- Shows:
+  - title
+  - description
+  - resourceType
+  - difficulty
+  - tags
+  - estimatedMinutes
+  - created date
+
+### AI Learning Path Advisor
+
+- Route: `/advisor`.
+- UI:
+  - Textarea for “Describe your learning goal”.
+  - Slider for `maxItems`.
+  - Button to trigger recommendation.
+- On submit:
+  - Calls `POST /api/ai/recommend-path` via Redux thunk or `useAIRecommend`.
+  - Displays:
+    - summary
+    - list of recommended resources (cards are clickable and link to `/resources/:id`)
+    - totalEstimatedMinutes
+    - explanation
+
+## Assumptions and Limitations
+
+- No authentication; all APIs are public.
+- Data is not persisted across backend restarts (in-memory storage).
+- Visual design uses Tailwind-style utility classes; focus is on behavior and typing rather than pixel-perfect UI.

@@ -8,33 +8,35 @@ import type {
 } from "../../types/types";
 import { buildUrl } from "../../utils/utils";
 
-const API_BASE_URL = "http://localhost:9000/api/v1";
+const API_BASE_URL = "http://localhost:9000/api";
 
 export interface ResourceFilters {
-  search?: string;
+  q?: string;
   resourceType?: string;
   difficulty?: string;
-  tags?: string | string[]; // frontend-friendly
+  tag?: string;
 }
 
 /* ---------- queries ---------- */
 export function useResources(filters?: ResourceFilters) {
-  const url = buildUrl(`${API_BASE_URL}/getAllResources`, filters);
+  const url = buildUrl(`${API_BASE_URL}/resources`, filters);
 
   return useQuery<Resource[], Error>({
     queryKey: ["resources", filters],
     queryFn: async () => {
       const res = await fetch(url, { credentials: "include" });
       if (!res.ok) throw new Error("Failed to fetch resources");
-      return res.json();
+      const json = await res.json();
+      return Array.isArray(json.items) ? json.items : [];
     },
   });
 }
+
 export function useResource(id: string | undefined) {
   return useQuery<Resource | null, Error>({
     queryKey: ["resource", id],
     queryFn: async () => {
-      const res = await fetch(`${API_BASE_URL}/getResourcesById/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/resources/${id}`, {
         credentials: "include",
       });
 
@@ -54,7 +56,7 @@ export function useCreateResource() {
 
   return useMutation<Resource, Error, InsertResource>({
     mutationFn: async (data) => {
-      const res = await fetch(`${API_BASE_URL}/createResource`, {
+      const res = await fetch(`${API_BASE_URL}/resources`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -84,7 +86,7 @@ export function useUpdateResource() {
   return useMutation<Resource, Error, Partial<InsertResource> & { id: string }>(
     {
       mutationFn: async ({ id, ...updates }) => {
-        const res = await fetch(`${API_BASE_URL}/updateResource/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/resources/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updates),
@@ -111,7 +113,7 @@ export function useDeleteResource() {
 
   return useMutation<void, Error, string>({
     mutationFn: async (id) => {
-      const res = await fetch(`${API_BASE_URL}/deleteResource/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/resources/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -129,7 +131,7 @@ export function useDeleteResource() {
 export function useAIRecommend() {
   return useMutation<RecommendationResponse, Error, RecommendationRequest>({
     mutationFn: async (data) => {
-      const res = await fetch(`${API_BASE_URL}/recommend-path`, {
+      const res = await fetch(`${API_BASE_URL}/ai/recommend-path`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
