@@ -1,0 +1,49 @@
+import Joi, { ObjectSchema } from "joi";
+import {
+  LearningResource,
+  ResourceType,
+  Difficulty,
+} from "../models/learningResource";
+
+export interface ResourceIdParam {
+  id: string;
+}
+
+export type CreateResourceDTO = Omit<
+  LearningResource,
+  "id" | "createdAt" | "updatedAt"
+>;
+
+export type UpdateResourceDTO = Partial<CreateResourceDTO>;
+
+export const resourceIdSchema: ObjectSchema<ResourceIdParam> = Joi.object({
+  id: Joi.string().uuid().required(),
+});
+
+export const createResourceSchema: ObjectSchema<CreateResourceDTO> =
+  Joi.object<CreateResourceDTO>({
+    title: Joi.string().min(3).max(200).required(),
+    slug: Joi.string()
+      .pattern(/^[a-z0-9-]+$/)
+      .required(),
+    description: Joi.string().min(10).required(),
+    resourceType: Joi.string()
+      .valid("Article", "Video", "Tutorial", "Course")
+      .required(),
+    difficulty: Joi.string()
+      .valid("Beginner", "Intermediate", "Advanced")
+      .required(),
+    tags: Joi.array().items(Joi.string()).min(1).required(),
+    estimatedMinutes: Joi.number().positive().required(),
+  });
+
+export const updateResourceSchema: ObjectSchema<UpdateResourceDTO> =
+  Joi.object<UpdateResourceDTO>({
+    title: Joi.string().min(3).max(200),
+    slug: Joi.string().pattern(/^[a-z0-9-]+$/),
+    description: Joi.string().min(10),
+    resourceType: Joi.string().valid("Article", "Video", "Tutorial", "Course"),
+    difficulty: Joi.string().valid("Beginner", "Intermediate", "Advanced"),
+    tags: Joi.array().items(Joi.string()).min(1),
+    estimatedMinutes: Joi.number().positive(),
+  }).min(1);
