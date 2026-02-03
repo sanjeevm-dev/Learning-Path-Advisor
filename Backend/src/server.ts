@@ -14,7 +14,12 @@ const app: Application = express();
 const port = process.env.PORT || 9000;
 
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 app.use(cookieParser());
 app.use(express.json());
 
