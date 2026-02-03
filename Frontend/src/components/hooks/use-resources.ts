@@ -1,11 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
-import type { Resource } from "../../redux/resourcesSlice";
 import type {
   InsertResource,
   RecommendationRequest,
   RecommendationResponse,
+  Resource,
 } from "../../types/types";
+import { buildUrl } from "../../utils/utils";
 
 const API_BASE_URL = "http://localhost:9000/api/v1";
 
@@ -16,18 +17,6 @@ export interface ResourceFilters {
   tags?: string | string[]; // frontend-friendly
 }
 
-/* ---------- utils ---------- */
-function buildUrl(path: string, params?: Record<string, any>) {
-  if (!params) return path;
-
-  const query = new URLSearchParams(
-    Object.entries(params)
-      .filter(([_, v]) => v !== undefined && v !== "")
-      .map(([k, v]) => [k, Array.isArray(v) ? v.join(",") : String(v)]),
-  ).toString();
-
-  return `${path}?${query}`;
-}
 /* ---------- queries ---------- */
 export function useResources(filters?: ResourceFilters) {
   const url = buildUrl(`${API_BASE_URL}/getAllResources`, filters);
@@ -41,7 +30,7 @@ export function useResources(filters?: ResourceFilters) {
     },
   });
 }
-export function useResource(id: number) {
+export function useResource(id: string | undefined) {
   return useQuery<Resource | null, Error>({
     queryKey: ["resource", id],
     queryFn: async () => {
@@ -92,7 +81,7 @@ export function useUpdateResource() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  return useMutation<Resource, Error, Partial<InsertResource> & { id: number }>(
+  return useMutation<Resource, Error, Partial<InsertResource> & { id: string }>(
     {
       mutationFn: async ({ id, ...updates }) => {
         const res = await fetch(`${API_BASE_URL}/updateResource/${id}`, {
@@ -120,7 +109,7 @@ export function useDeleteResource() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  return useMutation<void, Error, number>({
+  return useMutation<void, Error, string>({
     mutationFn: async (id) => {
       const res = await fetch(`${API_BASE_URL}/deleteResource/${id}`, {
         method: "DELETE",

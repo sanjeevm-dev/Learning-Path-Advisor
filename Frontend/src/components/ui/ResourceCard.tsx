@@ -7,15 +7,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-
-interface Resource {
-  id: string;
-  title: string;
-  description: string;
-  resourceType: "Article" | "Video" | "Tutorial" | "Course";
-  difficulty: "Beginner" | "Intermediate" | "Advanced";
-  estimatedMinutes: number;
-}
+import type { Resource } from "../../types/types";
 
 interface ResourceCardProps {
   resource: Resource;

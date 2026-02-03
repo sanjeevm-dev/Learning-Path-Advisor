@@ -11,11 +11,13 @@ export const resourceQuerySchema = Joi.object({
   search: Joi.string().trim().min(1).optional(),
 
   resourceType: Joi.string()
-    .valid("video", "article", "course", "blog")
+    .valid("Article", "Video", "Tutorial", "Course")
+    .insensitive()
     .optional(),
 
   difficulty: Joi.string()
-    .valid("beginner", "intermediate", "advanced")
+    .valid("Beginner", "Intermediate", "Advanced")
+    .insensitive()
     .optional(),
 
   tags: Joi.alternatives()

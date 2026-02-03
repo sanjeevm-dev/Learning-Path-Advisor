@@ -2,214 +2,152 @@ import { useState } from "react";
 
 import { format } from "date-fns";
 import { useDeleteResource, useResources } from "../hooks/use-resources";
+import { ResourceForm } from "../ui/ResourceForm";
+import { Modal } from "../ui/Modal";
+import type { Resource } from "../../types/types";
 
 export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
-  const [editResource, setEditResource] = useState<
-    (any & { id: number }) | null
-  >(null);
+  const [editResource, setEditResource] = useState<Resource | null>(null);
 
-  const { data: resources, isLoading } = useResources({ search: search });
+  const { data: resources = [], isLoading } = useResources({ search });
   const deleteMutation = useDeleteResource();
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this resource?")) return;
     await deleteMutation.mutateAsync(id);
   };
 
   return (
-    <div style={{ padding: "1rem", maxWidth: "1200px", margin: "0 auto" }}>
+    <div className="mx-auto max-w-6xl px-4 py-8 space-y-6">
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1rem",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
-      >
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
             Manage Resources
           </h1>
-          <p style={{ color: "#666" }}>
+          <p className="mt-1 text-sm text-slate-600">
             Add, edit, or remove content from the library.
           </p>
         </div>
         <button
+          type="button"
           onClick={() => setCreateOpen(true)}
-          style={{
-            padding: "0.5rem 1rem",
-            backgroundColor: "#4f46e5",
-            color: "white",
-            border: "none",
-            borderRadius: "0.25rem",
-            cursor: "pointer",
-          }}
+          className="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
         >
           + Add Resource
         </button>
       </div>
 
-      {/* Create Resource Form */}
-      {createOpen && (
-        <div
-          style={{
-            marginBottom: "1rem",
-            border: "1px solid #ddd",
-            padding: "1rem",
-            borderRadius: "0.25rem",
-            backgroundColor: "#fafafa",
-          }}
-        >
-          <h2 style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
-            Add New Resource
-          </h2>
-          <button
-            onClick={() => setCreateOpen(false)}
-            style={{ marginTop: "0.5rem" }}
-          >
-            Cancel
-          </button>
-        </div>
-      )}
-
       {/* Search */}
-      <div style={{ marginBottom: "1rem" }}>
+      <div>
         <input
           type="text"
           placeholder="Search by title..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{
-            padding: "0.5rem",
-            width: "100%",
-            maxWidth: "300px",
-            border: "1px solid #ccc",
-            borderRadius: "0.25rem",
-          }}
+          className="w-full max-w-xs rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
         />
       </div>
 
       {/* Resource Table */}
-      {isLoading ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>Loading...</div>
-      ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ borderBottom: "1px solid #ccc" }}>
-              <th style={{ textAlign: "left", padding: "0.5rem" }}>Title</th>
-              <th style={{ padding: "0.5rem" }}>Type</th>
-              <th style={{ padding: "0.5rem" }}>Difficulty</th>
-              <th style={{ padding: "0.5rem" }}>Created</th>
-              <th style={{ textAlign: "right", padding: "0.5rem" }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {resources?.items?.length === 0 ? (
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        {isLoading ? (
+          <div className="py-10 text-center text-slate-500">Loading...</div>
+        ) : resources.length === 0 ? (
+          <div className="py-10 text-center text-slate-500">
+            No resources found.
+          </div>
+        ) : (
+          <table className="min-w-full divide-y divide-slate-200 text-sm">
+            <thead className="bg-slate-50">
               <tr>
-                <td
-                  colSpan={5}
-                  style={{
-                    textAlign: "center",
-                    padding: "2rem",
-                    color: "#666",
-                  }}
-                >
-                  No resources found.
-                </td>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Title
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Type
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Difficulty
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Created
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Actions
+                </th>
               </tr>
-            ) : (
-              resources?.items?.map((resource: any) => (
-                <tr
-                  key={resource.id}
-                  style={{ borderBottom: "1px solid #eee" }}
-                >
-                  <td style={{ padding: "0.5rem", fontWeight: "bold" }}>
-                    {resource.title}
-                    <div style={{ fontSize: "0.75rem", color: "#888" }}>
+            </thead>
+            <tbody className="divide-y divide-slate-200 bg-white">
+              {resources.map((resource) => (
+                <tr key={resource.id}>
+                  <td className="px-4 py-3 align-top">
+                    <div className="font-medium text-slate-900">
+                      {resource.title}
+                    </div>
+                    <div className="text-xs text-slate-500">
                       {resource.slug}
                     </div>
                   </td>
-                  <td style={{ padding: "0.5rem", textAlign: "center" }}>
+                  <td className="px-4 py-3 align-top text-slate-700">
                     {resource.resourceType}
                   </td>
-                  <td style={{ padding: "0.5rem", textAlign: "center" }}>
+                  <td className="px-4 py-3 align-top text-slate-700">
                     {resource.difficulty}
                   </td>
-                  <td
-                    style={{
-                      padding: "0.5rem",
-                      textAlign: "center",
-                      color: "#666",
-                    }}
-                  >
+                  <td className="px-4 py-3 align-top text-slate-500">
                     {format(
                       new Date(resource.createdAt || new Date()),
                       "MMM d, yyyy",
                     )}
                   </td>
-                  <td style={{ padding: "0.5rem", textAlign: "right" }}>
+                  <td className="px-4 py-3 align-top text-right">
                     <button
+                      type="button"
                       onClick={() => setEditResource(resource)}
-                      style={{
-                        marginRight: "0.5rem",
-                        padding: "0.25rem 0.5rem",
-                        cursor: "pointer",
-                      }}
+                      className="mr-2 inline-flex items-center rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Edit
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleDelete(resource.id)}
-                      style={{
-                        padding: "0.25rem 0.5rem",
-                        cursor: "pointer",
-                        color: "white",
-                        backgroundColor: "#dc2626",
-                        border: "none",
-                        borderRadius: "0.25rem",
-                      }}
+                      className="inline-flex items-center rounded-md bg-red-600 px-2 py-1 text-xs font-medium text-white hover:bg-red-700"
                     >
                       Delete
                     </button>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      )}
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
-      {/* Edit Form */}
-      {editResource && (
-        <div
-          style={{
-            marginTop: "1rem",
-            border: "1px solid #ddd",
-            padding: "1rem",
-            borderRadius: "0.25rem",
-            backgroundColor: "#fafafa",
-          }}
-        >
-          <h2 style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
-            Edit Resource
-          </h2>
-          <button
+      {/* Create Modal */}
+      <Modal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        title="Add New Resource"
+      >
+        <ResourceForm onSuccess={() => setCreateOpen(false)} />
+      </Modal>
+
+      {/* Edit Modal */}
+      <Modal
+        open={!!editResource}
+        onClose={() => setEditResource(null)}
+        title="Edit Resource"
+      >
+        {editResource && (
+          <ResourceForm
             resource={editResource}
-            onClick={() => setEditResource(null)}
+            onSuccess={() => setEditResource(null)}
           />
-          <button
-            onClick={() => setEditResource(null)}
-            style={{ marginTop: "0.5rem" }}
-          >
-            Cancel
-          </button>
-        </div>
-      )}
+        )}
+      </Modal>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useResources } from "../hooks/use-resources";
-import { DIFFICULTIES, RESOURCE_TYPES } from "../ui/ResourceForm";
+import { DIFFICULTIES, RESOURCE_TYPES } from "../../types/types";
 
 // Simple ResourceCard component
 function ResourceCard({ resource }: { resource: any }) {
@@ -47,10 +47,16 @@ export default function LibraryPage() {
           Discover curated resources to help you master new skills.
         </p>
         <div className="flex justify-center gap-4">
-          <button className="px-8 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">
+          <button
+            onClick={() => (window.location.href = "/advisor")}
+            className="px-8 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
+          >
             Get AI Recommendations
           </button>
-          <button className="px-8 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition">
+          <button
+            onClick={() => (window.location.href = "/admin")}
+            className="px-8 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition"
+          >
             Manage Library
           </button>
         </div>

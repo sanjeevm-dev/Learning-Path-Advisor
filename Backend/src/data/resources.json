@@ -1,27 +1,12 @@
 [
   {
-    "id": "b79c2998-d72c-4ebb-8bb7-b59f7df9b085",
-    "title": "Advanced React Patterns",
-    "slug": "advanced-react-patterns",
-    "description": "Deep dive into advanced React concepts",
-    "resourceType": "Video",
-    "difficulty": "Advanced",
-    "tags": [
-      "react",
-      "patterns"
-    ],
-    "estimatedMinutes": 90,
-    "createdAt": "2026-02-03T12:52:53.531Z",
-    "updatedAt": "2026-02-03T12:52:53.531Z"
-  },
-  {
     "id": "4548778b-f974-402b-bf91-df7dd739d99f",
     "createdAt": "2026-02-03T12:53:04.770Z",
-    "updatedAt": "2026-02-03T12:53:04.770Z",
+    "updatedAt": "2026-02-03T17:35:31.652Z",
     "title": "Advanced React Patterns",
     "slug": "advanced-react-patterns",
     "description": "Explore advanced design patterns in React to write scalable and maintainable applications.",
-    "resourceType": "Course",
+    "resourceType": "Video",
     "difficulty": "Advanced",
     "tags": [
       "react",
@@ -30,23 +15,6 @@
       "advanced"
     ],
     "estimatedMinutes": 120
-  },
-  {
-    "id": "cdaabeae-1815-47fc-a8eb-d64c4154b077",
-    "createdAt": "2026-02-03T12:53:04.773Z",
-    "updatedAt": "2026-02-03T13:43:07.872Z",
-    "title": "manju",
-    "slug": "rest-api-design-principles",
-    "description": "Learn the best practices and standards for designing RESTful APIs, including endpoints, status codes, and versioning.",
-    "resourceType": "Article",
-    "difficulty": "Intermediate",
-    "tags": [
-      "api",
-      "rest",
-      "backend",
-      "design"
-    ],
-    "estimatedMinutes": 30
   },
   {
     "id": "dcc87759-0252-4405-9969-0898ce1f31fc",

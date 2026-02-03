@@ -7,7 +7,7 @@ import { fetchAIRecommendation } from "../../redux/aiSlice";
 import type {
   RecommendationRequest,
   RecommendationResponse,
-} from "../hooks/use-re"; // your shared types
+} from "../../types/types";
 
 import { ResourceCard } from "../ui/ResourceCard"; // Your plain card component
 
@@ -118,14 +118,7 @@ export default function AdvisorPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting || aiState.loading}
-                    style={{
-                      padding: "0.5rem 1rem",
-                      fontWeight: "bold",
-                      cursor:
-                        isSubmitting || aiState.loading
-                          ? "not-allowed"
-                          : "pointer",
-                    }}
+                    className="px-8 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
                   >
                     {aiState.loading ? "Generating Path..." : "Generate Path"}
                   </button>
@@ -185,7 +178,7 @@ export default function AdvisorPage() {
               </div>
 
               <div>
-                {recommendation.resources.map((resource, index) => (
+                {recommendation.resources.map((resource) => (
                   <div key={resource.id} style={{ marginBottom: "1rem" }}>
                     <ResourceCard resource={resource} compact />
                   </div>

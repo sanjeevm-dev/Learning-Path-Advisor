@@ -1,17 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-export interface Resource {
-  id: number;
-  title: string;
-  slug: string;
-  description: string;
-  resourceType: string;
-  difficulty: string;
-  estimatedMinutes: number;
-  tags: string[];
-  createdAt?: string;
-}
+import type { Resource } from "../types/types";
 
 interface ResourcesState {
   items: Resource[];
@@ -62,7 +51,7 @@ export const updateResource = createAsyncThunk(
 
 export const deleteResource = createAsyncThunk(
   "resources/delete",
-  async (id: number) => {
+  async (id: string) => {
     const res = await fetch(`/api/resources/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error("Failed to delete resource");
     return id;
@@ -110,7 +99,7 @@ const resourcesSlice = createSlice({
       // Delete
       .addCase(
         deleteResource.fulfilled,
-        (state, action: PayloadAction<number>) => {
+        (state, action: PayloadAction<string>) => {
           state.items = state.items.filter((r) => r.id !== action.payload);
         },
       );

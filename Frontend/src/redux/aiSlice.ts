@@ -6,7 +6,9 @@ import {
 import type {
   RecommendationRequest,
   RecommendationResponse,
-} from "../components/hooks/use-re"; // your shared types
+} from "../types/types";
+
+const API_BASE_URL = "http://localhost:9000/api/v1";
 
 // Async thunk for AI recommendation API call
 export const fetchAIRecommendation = createAsyncThunk<
@@ -15,7 +17,7 @@ export const fetchAIRecommendation = createAsyncThunk<
   { rejectValue: string }
 >("ai/fetchRecommendation", async (payload, { rejectWithValue }) => {
   try {
-    const res = await fetch("/api/ai/recommend", {
+    const res = await fetch(`${API_BASE_URL}/recommend-path`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

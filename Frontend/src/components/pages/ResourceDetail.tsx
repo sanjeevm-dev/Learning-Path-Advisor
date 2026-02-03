@@ -1,4 +1,6 @@
+import type { ReactNode } from "react";
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useResource, useDeleteResource } from "../hooks/use-resources";
 import { format } from "date-fns";
 
@@ -7,11 +9,11 @@ function Badge({
   children,
   variant,
 }: {
-  children: React.ReactNode;
-  variant?: string;
+  children: ReactNode;
+  variant?: "outline" | "secondary";
 }) {
   const base = "px-3 py-1 rounded-full text-sm";
-  const variants: Record<string, string> = {
+  const variants: Record<NonNullable<typeof variant>, string> = {
     outline: "border border-gray-300 text-gray-700 bg-gray-100",
     secondary: "bg-gray-200 text-gray-700",
   };
@@ -23,7 +25,14 @@ function Badge({
 }
 
 // Simple Button component
-function Button({ children, onClick, className, disabled }: any) {
+interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  className?: string;
+  disabled?: boolean;
+}
+
+function Button({ children, onClick, className = "", disabled }: ButtonProps) {
   return (
     <button
       onClick={onClick}
@@ -41,22 +50,23 @@ function Skeleton({ className }: { className: string }) {
 }
 
 // Simple Card
-function Card({ children }: { children: React.ReactNode }) {
+function Card({ children }: { children: ReactNode }) {
   return (
     <div className="p-4 border rounded-xl shadow-sm bg-white">{children}</div>
   );
 }
 
-export default function ResourceDetail({ resourceId }: { resourceId: number }) {
-  const { data: resource, isLoading } = useResource(resourceId);
+export default function ResourceDetail() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { data: resource, isLoading } = useResource(id);
   const deleteMutation = useDeleteResource();
   const [isEditing, setIsEditing] = useState(false);
 
   const handleDelete = async () => {
     if (!resource) return;
     await deleteMutation.mutateAsync(resource.id);
-    // redirect to library after delete
-    window.location.href = "/";
+    navigate("/");
   };
 
   if (isLoading) {
@@ -77,16 +87,14 @@ export default function ResourceDetail({ resourceId }: { resourceId: number }) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <h2 className="text-2xl font-bold mb-4">Resource not found</h2>
-        <Button onClick={() => (window.location.href = "/")}>
-          Return to Library
-        </Button>
+        <Button onClick={() => navigate("/")}>Return to Library</Button>
       </div>
     );
   }
 
   return (
     <div className="max-w-4xl mx-auto pt-4 pb-20 space-y-6">
-      <Button onClick={() => (window.location.href = "/")} className="mb-6">
+      <Button onClick={() => navigate("/")} className="mb-6">
         ← Back to Library
       </Button>
 
@@ -116,7 +124,10 @@ export default function ResourceDetail({ resourceId }: { resourceId: number }) {
         <div>{resource.estimatedMinutes} mins</div>
         <div>
           Added{" "}
-          {format(new Date(resource.createdAt || new Date()), "MMM d, yyyy")}
+          {format(
+            new Date(resource.createdAt ?? new Date().toISOString()),
+            "MMM d, yyyy",
+          )}
         </div>
         <Button className="ml-auto">Share</Button>
       </div>

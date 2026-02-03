@@ -1,12 +1,9 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import { createResource, updateResource } from "../../redux/resourcesSlice";
-import type { Resource } from "../../redux/resourcesSlice";
-
-export const RESOURCE_TYPES = ["article", "video", "tutorial", "course"];
-export const DIFFICULTIES = ["beginner", "intermediate", "advanced"];
+import { useCreateResource, useUpdateResource } from "../hooks/use-resources";
+import type { InsertResource, Resource } from "../../types/types";
+import { RESOURCE_TYPES, DIFFICULTIES } from "../../types/types";
 
 interface ResourceFormProps {
   resource?: Resource;
@@ -31,7 +28,8 @@ export const ResourceForm: React.FC<ResourceFormProps> = ({
   resource,
   onSuccess,
 }) => {
-  const dispatch = useDispatch();
+  const createMutation = useCreateResource();
+  const updateMutation = useUpdateResource();
 
   return (
     <Formik
@@ -50,17 +48,22 @@ export const ResourceForm: React.FC<ResourceFormProps> = ({
           .split(",")
           .map((t) => t.trim())
           .filter(Boolean);
-        const payload: Resource = {
-          id: resource?.id || 0,
-          ...values,
+
+        const payload: InsertResource = {
+          title: values.title,
+          slug: values.slug,
+          description: values.description,
+          resourceType: values.resourceType,
+          difficulty: values.difficulty,
+          estimatedMinutes: values.estimatedMinutes,
           tags,
-        } as Resource;
+        };
 
         try {
           if (resource?.id) {
-            await dispatch(updateResource(payload));
+            await updateMutation.mutateAsync({ id: resource.id, ...payload });
           } else {
-            await dispatch(createResource(payload));
+            await createMutation.mutateAsync(payload);
           }
           onSuccess?.();
         } catch (err) {
@@ -71,92 +74,144 @@ export const ResourceForm: React.FC<ResourceFormProps> = ({
       }}
     >
       {({ isSubmitting }) => (
-        <Form style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div>
-            <label>Title</label>
-            <Field name="title" placeholder="Intro to React" />
-            <ErrorMessage
+        <Form className="space-y-4">
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">
+              Title
+            </label>
+            <Field
               name="title"
-              component="div"
-              style={{ color: "red" }}
+              placeholder="Intro to React"
+              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
+            <ErrorMessage name="title">
+              {(msg) => (
+                <div className="text-xs text-red-600" aria-live="polite">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
           </div>
 
-          <div>
-            <label>Slug</label>
-            <Field name="slug" placeholder="intro-to-react" />
-            <ErrorMessage
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">
+              Slug
+            </label>
+            <Field
               name="slug"
-              component="div"
-              style={{ color: "red" }}
+              placeholder="intro-to-react"
+              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
+            <ErrorMessage name="slug">
+              {(msg) => (
+                <div className="text-xs text-red-600" aria-live="polite">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
           </div>
 
-          <div>
-            <label>Description</label>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">
+              Description
+            </label>
             <Field
               name="description"
               as="textarea"
               placeholder="What is this resource about?"
+              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
-            <ErrorMessage
-              name="description"
-              component="div"
-              style={{ color: "red" }}
-            />
+            <ErrorMessage name="description">
+              {(msg) => (
+                <div className="text-xs text-red-600" aria-live="polite">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
           </div>
 
-          <div>
-            <label>Type</label>
-            <Field name="resourceType" as="select">
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">
+              Type
+            </label>
+            <Field
+              name="resourceType"
+              as="select"
+              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            >
               {RESOURCE_TYPES.map((t) => (
                 <option key={t} value={t}>
                   {t}
                 </option>
               ))}
             </Field>
-            <ErrorMessage
-              name="resourceType"
-              component="div"
-              style={{ color: "red" }}
-            />
+            <ErrorMessage name="resourceType">
+              {(msg) => (
+                <div className="text-xs text-red-600" aria-live="polite">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
           </div>
 
-          <div>
-            <label>Difficulty</label>
-            <Field name="difficulty" as="select">
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">
+              Difficulty
+            </label>
+            <Field
+              name="difficulty"
+              as="select"
+              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            >
               {DIFFICULTIES.map((d) => (
                 <option key={d} value={d}>
                   {d}
                 </option>
               ))}
             </Field>
-            <ErrorMessage
-              name="difficulty"
-              component="div"
-              style={{ color: "red" }}
-            />
+            <ErrorMessage name="difficulty">
+              {(msg) => (
+                <div className="text-xs text-red-600" aria-live="polite">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
           </div>
 
-          <div>
-            <label>Estimated Minutes</label>
-            <Field name="estimatedMinutes" type="number" />
-            <ErrorMessage
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">
+              Estimated Minutes
+            </label>
+            <Field
               name="estimatedMinutes"
-              component="div"
-              style={{ color: "red" }}
+              type="number"
+              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
+            <ErrorMessage name="estimatedMinutes">
+              {(msg) => (
+                <div className="text-xs text-red-600" aria-live="polite">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
           </div>
 
-          <div>
-            <label>Tags (comma separated)</label>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">
+              Tags (comma separated)
+            </label>
             <Field
               name="tagsString"
               placeholder="react, frontend, javascript"
+              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
           </div>
 
-          <button type="submit" disabled={isSubmitting}>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
+          >
             {resource ? "Update Resource" : "Create Resource"}
           </button>
         </Form>
