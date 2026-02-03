@@ -3,7 +3,6 @@ import { useResources } from "../hooks/use-resources";
 import { DIFFICULTIES, RESOURCE_TYPES } from "../../types/types";
 import { ResourceCard } from "../ui/ResourceCard";
 
-// Simple Skeleton component for loading state
 function Skeleton({ className }: { className: string }) {
   return <div className={`bg-gray-200 animate-pulse ${className}`} />;
 }

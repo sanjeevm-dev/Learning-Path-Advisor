@@ -1,4 +1,4 @@
-// Navigation.jsx
+// Top navigation bar
 import { NavLink } from "react-router-dom";
 import { BookOpen, Sparkles, LayoutDashboard } from "lucide-react";
 

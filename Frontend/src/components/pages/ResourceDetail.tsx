@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useResource, useDeleteResource } from "../hooks/use-resources";
 import { format } from "date-fns";
 
-// Simple Badge component
 function Badge({
   children,
   variant,
@@ -24,7 +23,6 @@ function Badge({
   );
 }
 
-// Simple Button component
 interface ButtonProps {
   children: ReactNode;
   onClick?: () => void;
@@ -44,12 +42,10 @@ function Button({ children, onClick, className = "", disabled }: ButtonProps) {
   );
 }
 
-// Skeleton component
 function Skeleton({ className }: { className: string }) {
   return <div className={`bg-gray-200 animate-pulse ${className}`} />;
 }
 
-// Simple Card
 function Card({ children }: { children: ReactNode }) {
   return (
     <div className="p-4 border rounded-xl shadow-sm bg-white">{children}</div>

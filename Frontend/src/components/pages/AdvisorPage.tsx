@@ -9,9 +9,8 @@ import type {
   RecommendationResponse,
 } from "../../types/types";
 
-import { ResourceCard } from "../ui/ResourceCard"; // Your plain card component
+import { ResourceCard } from "../ui/ResourceCard";
 
-// Validation schema
 const validationSchema = Yup.object({
   goal: Yup.string().required("Learning goal is required"),
   maxItems: Yup.number()
@@ -50,7 +49,6 @@ export default function AdvisorPage() {
       </div>
 
       <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
-        {/* Form */}
         <div style={{ flex: "1 1 250px" }}>
           <div
             style={{

@@ -72,14 +72,12 @@ export class ResourcesController {
         options: { abortEarly: false },
       });
 
-      // Normalize to array
       const resources = Array.isArray(req.body) ? req.body : [req.body];
 
       const created = resources.map((resource) =>
         ResourcesService.create(resource),
       );
 
-      // Return single object if single input
       res.status(201).json(Array.isArray(req.body) ? created : created[0]);
     } catch (err) {
       next(err);
@@ -138,4 +136,3 @@ export class ResourcesController {
     return err;
   }
 }
-
