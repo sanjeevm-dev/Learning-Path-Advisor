@@ -8,7 +8,7 @@ React + TypeScript + Vite frontend for browsing learning resources and generatin
 - TypeScript
 - Vite
 - React Router
-- @tanstack/react-query
+- tanstack/react-query
 
 ## Running the Frontend
 
@@ -35,19 +35,6 @@ The dev server runs on `http://localhost:5173` and expects the backend at `http:
   - difficulty
   - estimatedMinutes
 
-### Resource Detail View
-
-- Route: `/resources/:id`.
-- Uses `useResource` hook (calling `GET /api/resources/:id`).
-- Shows:
-  - title
-  - description
-  - resourceType
-  - difficulty
-  - tags
-  - estimatedMinutes
-  - created date
-
 ### AI Learning Path Advisor
 
 - Route: `/advisor`.
@@ -62,9 +49,3 @@ The dev server runs on `http://localhost:5173` and expects the backend at `http:
     - list of recommended resources (cards are clickable and link to `/resources/:id`)
     - totalEstimatedMinutes
     - explanation
-
-## Assumptions and Limitations
-
-- No authentication; all APIs are public.
-- Data is not persisted across backend restarts (in-memory storage).
-- Visual design uses Tailwind-style utility classes; focus is on behavior and typing rather than pixel-perfect UI.

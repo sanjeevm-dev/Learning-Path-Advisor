@@ -58,13 +58,17 @@ function Card({ children }: { children: ReactNode }) {
 export default function ResourceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: resource, isLoading } = useResource(id);
+  const { data: resource, isLoading, refetch } = useResource(id);
   const deleteMutation = useDeleteResource();
-  const [isEditing, setIsEditing] = useState(false);
   const [editResource, setEditResource] = useState<Resource | null>(null);
 
   const handleDelete = async () => {
     if (!resource) return;
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this resource?",
+    );
+    if (!confirmed) return;
+
     await deleteMutation.mutateAsync(resource.id);
     navigate("/");
   };
@@ -109,7 +113,7 @@ export default function ResourceDetail() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setIsEditing(!isEditing)}>Edit</Button>
+          <Button onClick={() => setEditResource(resource)}>Edit</Button>
           <Button
             onClick={handleDelete}
             className="bg-red-600 hover:bg-red-700"
@@ -160,7 +164,10 @@ export default function ResourceDetail() {
         {editResource && (
           <ResourceForm
             resource={editResource}
-            onSuccess={() => setEditResource(null)}
+            onSuccess={async () => {
+              setEditResource(null);
+              await refetch();
+            }}
           />
         )}
       </Modal>

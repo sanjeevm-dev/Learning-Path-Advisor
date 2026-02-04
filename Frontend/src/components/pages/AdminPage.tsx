@@ -75,6 +75,9 @@ export default function AdminPage() {
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                   Created
                 </th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Durration (min)
+                </th>
                 <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
                   Actions
                 </th>
@@ -102,6 +105,9 @@ export default function AdminPage() {
                       new Date(resource.createdAt || new Date()),
                       "MMM d, yyyy",
                     )}
+                  </td>
+                  <td className="px-4 py-3 align-top text-slate-500">
+                    {resource.estimatedMinutes}
                   </td>
                   <td className="px-4 py-3 align-top text-right">
                     <button

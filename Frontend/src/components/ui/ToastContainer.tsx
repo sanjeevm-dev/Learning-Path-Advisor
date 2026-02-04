@@ -6,7 +6,7 @@ export default function ToastContainer() {
   if (!toasts.length) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-16 z-50 flex justify-center px-4 sm:top-4 sm:justify-end">
+    <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-end px-4">
       <div className="flex w-full max-w-sm flex-col gap-3">
         {toasts.map((toast) => (
           <div
@@ -45,4 +45,3 @@ export default function ToastContainer() {
     </div>
   );
 }
-
