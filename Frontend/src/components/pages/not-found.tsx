@@ -1,5 +1,6 @@
 import { AlertCircle } from "lucide-react";
 
+// 404 Page
 export default function NotFound() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gray-50 px-4">

@@ -62,6 +62,7 @@ export default function ResourceDetail() {
   const deleteMutation = useDeleteResource();
   const [editResource, setEditResource] = useState<Resource | null>(null);
 
+  // Handle Delete
   const handleDelete = async () => {
     if (!resource) return;
     const confirmed = window.confirm(

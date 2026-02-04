@@ -17,7 +17,7 @@ export interface ResourceFilters {
   tag?: string;
 }
 
-/* ---------- queries ---------- */
+// List
 export function useResources(filters?: ResourceFilters) {
   const url = buildUrl(`${API_BASE_URL}/resources`, filters);
 
@@ -32,6 +32,7 @@ export function useResources(filters?: ResourceFilters) {
   });
 }
 
+// Single
 export function useResource(id: string | undefined) {
   return useQuery<Resource | null, Error>({
     queryKey: ["resource", id],
@@ -49,11 +50,12 @@ export function useResource(id: string | undefined) {
   });
 }
 
-/* ---------- mutations ---------- */
+//Mutations
 export function useCreateResource() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
+  // Create
   return useMutation<Resource, Error, InsertResource>({
     mutationFn: async (data) => {
       const res = await fetch(`${API_BASE_URL}/resources`, {
@@ -83,6 +85,7 @@ export function useUpdateResource() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
+  // Update
   return useMutation<Resource, Error, Partial<InsertResource> & { id: string }>(
     {
       mutationFn: async ({ id, ...updates }) => {
@@ -107,6 +110,7 @@ export function useUpdateResource() {
   );
 }
 
+// Delete
 export function useDeleteResource() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -127,7 +131,7 @@ export function useDeleteResource() {
   });
 }
 
-/* ---------- AI recommendation ---------- */
+// AI Recommendation
 export function useAIRecommend() {
   return useMutation<RecommendationResponse, Error, RecommendationRequest>({
     mutationFn: async (data) => {

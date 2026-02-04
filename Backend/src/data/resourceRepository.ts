@@ -98,9 +98,7 @@ export class InMemoryResourceRepository implements IResourceRepository {
   }
 }
 
-function mapDocToLearningResource(
-  doc: ILearningResource,
-): LearningResource {
+function mapDocToLearningResource(doc: ILearningResource): LearningResource {
   return {
     id: (doc as any)._id.toString(),
     title: doc.title,
