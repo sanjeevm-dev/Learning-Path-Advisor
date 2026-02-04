@@ -9,9 +9,11 @@ export interface ResourceFilters {
 }
 
 export class ResourcesService {
-  //Get All with Filters
-  static getAll(filters?: ResourceFilters): LearningResource[] {
-    let resources = resourceRepository.findAll();
+  // Get All with Filters
+  static async getAll(
+    filters?: ResourceFilters,
+  ): Promise<LearningResource[]> {
+    let resources = await resourceRepository.findAll();
 
     if (!filters) return resources;
 
@@ -49,27 +51,27 @@ export class ResourcesService {
     return resources;
   }
 
-  //Get by Id
-  static getById(id: string): LearningResource {
-    const resource = resourceRepository.findById(id);
+  // Get by Id
+  static async getById(id: string): Promise<LearningResource> {
+    const resource = await resourceRepository.findById(id);
     if (!resource) {
       throw new Error("RESOURCE_NOT_FOUND");
     }
     return resource;
   }
 
-  static create(
+  static async create(
     data: Omit<LearningResource, "id" | "createdAt" | "updatedAt">,
-  ): LearningResource {
+  ): Promise<LearningResource> {
     return resourceRepository.create(data);
   }
 
-  //Update
-  static update(
+  // Update
+  static async update(
     id: string,
     data: Partial<Omit<LearningResource, "id" | "createdAt">>,
-  ): LearningResource {
-    const existing = resourceRepository.findById(id);
+  ): Promise<LearningResource> {
+    const existing = await resourceRepository.findById(id);
     if (!existing) {
       throw new Error("RESOURCE_NOT_FOUND");
     }
@@ -80,13 +82,13 @@ export class ResourcesService {
       updatedAt: new Date().toISOString(),
     };
 
-    resourceRepository.replace(id, updated);
+    await resourceRepository.replace(id, updated);
     return updated;
   }
 
-  //Delete
-  static delete(id: string): void {
-    const deleted = resourceRepository.delete(id);
+  // Delete
+  static async delete(id: string): Promise<void> {
+    const deleted = await resourceRepository.delete(id);
     if (!deleted) {
       throw new Error("RESOURCE_NOT_FOUND");
     }

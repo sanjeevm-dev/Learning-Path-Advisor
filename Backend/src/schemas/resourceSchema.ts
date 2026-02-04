@@ -16,8 +16,11 @@ export type CreateResourceDTO = Omit<
 
 export type UpdateResourceDTO = Partial<CreateResourceDTO>;
 
+// Accept both UUID (for in-memory mode) and Mongo ObjectId (24-hex string)
 export const resourceIdSchema: ObjectSchema<ResourceIdParam> = Joi.object({
-  id: Joi.string().uuid().required(),
+  id: Joi.alternatives()
+    .try(Joi.string().uuid(), Joi.string().length(24).hex())
+    .required(),
 });
 
 //CreateResourceSchema for creating validation

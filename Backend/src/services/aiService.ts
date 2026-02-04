@@ -4,16 +4,20 @@ import { AIRecommendRequest } from "../schemas/aiRecommendationSchema";
 import { LearningResource } from "../models/learningResource";
 
 export class AIService {
-  //AI Recommendation Logic with keywords and prioritization
-  static recommendLearningPath({ goal, maxItems = 5 }: AIRecommendRequest) {
+  // AI Recommendation Logic with keywords and prioritization
+  static async recommendLearningPath({
+    goal,
+    maxItems = 5,
+  }: AIRecommendRequest) {
     const keywords = this.extractKeywords(goal);
 
     const isBeginner = ["beginner", "start", "basics", "intro", "first"].some(
       (k) => keywords.includes(k),
     );
 
-    const scored = resourceRepository
-      .findAll()
+    const allResources = await resourceRepository.findAll();
+
+    const scored = allResources
       .map((resource) => ({
         resource,
         score: this.scoreResource(resource, keywords, isBeginner),

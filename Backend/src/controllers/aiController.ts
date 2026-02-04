@@ -20,7 +20,7 @@ export class AIController {
         options: { abortEarly: false },
       });
 
-      const result = AIService.recommendLearningPath(req.body);
+      const result = await AIService.recommendLearningPath(req.body);
 
       res.status(200).json(result);
     } catch (err) {

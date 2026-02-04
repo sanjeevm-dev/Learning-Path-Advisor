@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useResources } from "../hooks/use-resources";
 import { DIFFICULTIES, RESOURCE_TYPES } from "../../types/types";
 import { ResourceCard } from "../ui/ResourceCard";
@@ -13,16 +13,28 @@ export default function LibraryPage() {
   const [type, setType] = useState("all");
   const [difficulty, setDifficulty] = useState("all");
   const [tag, setTag] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [debouncedTag, setDebouncedTag] = useState(tag);
+
+  // Manual debounce for text inputs (search + tag)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+      setDebouncedTag(tag);
+    }, 2000);
+
+    return () => clearTimeout(handler);
+  }, [search, tag]);
 
   const {
     data: resources = [],
     isLoading,
     error,
   } = useResources({
-    q: search || undefined,
+    q: debouncedSearch || undefined,
     resourceType: type !== "all" ? type : undefined,
     difficulty: difficulty !== "all" ? difficulty : undefined,
-    tag: tag || undefined,
+    tag: debouncedTag || undefined,
   });
 
   return (

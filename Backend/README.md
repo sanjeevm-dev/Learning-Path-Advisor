@@ -13,10 +13,16 @@ Node.js + TypeScript REST API for managing learning resources and providing a mo
 ```bash
 cd Backend
 npm install
-npm run dev        # start with ts-node / nodemon
+npm run dev
 ```
 
 The server listens on port `9000` by default and exposes APIs under `/api`.
+
+## env set up
+
+PORT=9000
+STORAGE_MODE=mongo
+MONGO_URI=mongodb://localhost:27017/learning-advisor
 
 ## Domain Model
 

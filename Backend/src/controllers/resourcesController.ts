@@ -34,7 +34,7 @@ export class ResourcesController {
         tags: tag ? [tag.toString()] : undefined,
       };
 
-      const resources = ResourcesService.getAll(filters);
+      const resources = await ResourcesService.getAll(filters);
 
       res.status(200).json({ items: resources });
     } catch (err) {
@@ -53,7 +53,7 @@ export class ResourcesController {
         data: req.params,
       });
 
-      const resource = ResourcesService.getById(req.params.id);
+      const resource = await ResourcesService.getById(req.params.id);
       res.status(200).json(resource);
     } catch (err) {
       next(ResourcesController.mapError(err));
@@ -74,8 +74,8 @@ export class ResourcesController {
 
       const resources = Array.isArray(req.body) ? req.body : [req.body];
 
-      const created = resources.map((resource) =>
-        ResourcesService.create(resource),
+      const created = await Promise.all(
+        resources.map((resource) => ResourcesService.create(resource)),
       );
 
       res.status(201).json(Array.isArray(req.body) ? created : created[0]);
@@ -101,7 +101,10 @@ export class ResourcesController {
         options: { abortEarly: false },
       });
 
-      const updated = ResourcesService.update(req.params.id, req.body);
+      const updated = await ResourcesService.update(
+        req.params.id,
+        req.body,
+      );
 
       res.status(200).json(updated);
     } catch (err) {
@@ -120,7 +123,7 @@ export class ResourcesController {
         data: req.params,
       });
 
-      ResourcesService.delete(req.params.id);
+      await ResourcesService.delete(req.params.id);
       res.status(204).send();
     } catch (err) {
       next(ResourcesController.mapError(err));

@@ -1,7 +1,24 @@
-import { LearningResource } from "../models/learningResource";
 import { randomUUID } from "node:crypto";
+import dotenv from "dotenv";
+import { LearningResource } from "../models/learningResource";
+import {
+  ILearningResource,
+  LearningResourceModel,
+} from "../models/learningResourceModel";
 
-class ResourceRepository {
+dotenv.config();
+
+export interface IResourceRepository {
+  findAll(): Promise<LearningResource[]>;
+  findById(id: string): Promise<LearningResource | undefined>;
+  create(
+    data: Omit<LearningResource, "id" | "createdAt" | "updatedAt">,
+  ): Promise<LearningResource>;
+  replace(id: string, resource: LearningResource): Promise<void>;
+  delete(id: string): Promise<boolean>;
+}
+
+export class InMemoryResourceRepository implements IResourceRepository {
   private resources: LearningResource[] = [];
 
   constructor() {
@@ -41,20 +58,17 @@ class ResourceRepository {
     ];
   }
 
-  // Get All
-  findAll(): LearningResource[] {
+  async findAll(): Promise<LearningResource[]> {
     return [...this.resources];
   }
 
-  // Get by Id
-  findById(id: string): LearningResource | undefined {
+  async findById(id: string): Promise<LearningResource | undefined> {
     return this.resources.find((r) => r.id === id);
   }
 
-  // Create
-  create(
+  async create(
     data: Omit<LearningResource, "id" | "createdAt" | "updatedAt">,
-  ): LearningResource {
+  ): Promise<LearningResource> {
     const now = new Date().toISOString();
 
     const resource: LearningResource = {
@@ -69,8 +83,7 @@ class ResourceRepository {
     return resource;
   }
 
-  // Update
-  replace(id: string, resource: LearningResource): void {
+  async replace(id: string, resource: LearningResource): Promise<void> {
     const index = this.resources.findIndex((r) => r.id === id);
 
     if (index !== -1) {
@@ -78,12 +91,82 @@ class ResourceRepository {
     }
   }
 
-  // Delete
-  delete(id: string): boolean {
+  async delete(id: string): Promise<boolean> {
     const before = this.resources.length;
     this.resources = this.resources.filter((r) => r.id !== id);
     return this.resources.length < before;
   }
 }
 
-export const resourceRepository = new ResourceRepository();
+function mapDocToLearningResource(
+  doc: ILearningResource,
+): LearningResource {
+  return {
+    id: (doc as any)._id.toString(),
+    title: doc.title,
+    slug: doc.slug,
+    description: doc.description,
+    resourceType: doc.resourceType,
+    difficulty: doc.difficulty,
+    tags: doc.tags,
+    estimatedMinutes: doc.estimatedMinutes,
+    createdAt: doc.createdAt.toISOString(),
+    updatedAt: doc.updatedAt.toISOString(),
+  };
+}
+
+export class MongoResourceRepository implements IResourceRepository {
+  async findAll(): Promise<LearningResource[]> {
+    const docs = await LearningResourceModel.find().exec();
+    return docs.map(mapDocToLearningResource);
+  }
+
+  async findById(id: string): Promise<LearningResource | undefined> {
+    const doc = await LearningResourceModel.findById(id).exec();
+    return doc ? mapDocToLearningResource(doc) : undefined;
+  }
+
+  async create(
+    data: Omit<LearningResource, "id" | "createdAt" | "updatedAt">,
+  ): Promise<LearningResource> {
+    const doc = await LearningResourceModel.create({
+      title: data.title,
+      slug: data.slug,
+      description: data.description,
+      resourceType: data.resourceType,
+      difficulty: data.difficulty,
+      tags: data.tags,
+      estimatedMinutes: data.estimatedMinutes,
+    });
+
+    return mapDocToLearningResource(doc);
+  }
+
+  async replace(id: string, resource: LearningResource): Promise<void> {
+    await LearningResourceModel.findByIdAndUpdate(
+      id,
+      {
+        title: resource.title,
+        slug: resource.slug,
+        description: resource.description,
+        resourceType: resource.resourceType,
+        difficulty: resource.difficulty,
+        tags: resource.tags,
+        estimatedMinutes: resource.estimatedMinutes,
+      },
+      { new: false },
+    ).exec();
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const res = await LearningResourceModel.findByIdAndDelete(id).exec();
+    return !!res;
+  }
+}
+
+const storageMode = (process.env.STORAGE_MODE || "memory").toLowerCase();
+
+export const resourceRepository: IResourceRepository =
+  storageMode === "mongo"
+    ? new MongoResourceRepository()
+    : new InMemoryResourceRepository();
