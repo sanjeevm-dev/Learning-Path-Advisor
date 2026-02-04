@@ -1,5 +1,5 @@
 // models/learningResourceModel.ts
-import mongoose, { Schema, Document, model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
 export type ResourceType = "Article" | "Video" | "Tutorial" | "Course";
 export type Difficulty = "Beginner" | "Intermediate" | "Advanced";
@@ -41,7 +41,7 @@ const LearningResourceSchema: Schema<ILearningResource> = new Schema(
     },
     estimatedMinutes: { type: Number, required: true, min: 1 },
   },
-  { timestamps: true }, // automatically adds createdAt and updatedAt
+  { timestamps: true },
 );
 
 export const LearningResourceModel = model<ILearningResource>(

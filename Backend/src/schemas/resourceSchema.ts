@@ -20,6 +20,7 @@ export const resourceIdSchema: ObjectSchema<ResourceIdParam> = Joi.object({
   id: Joi.string().uuid().required(),
 });
 
+//CreateResourceSchema for creating validation
 export const createResourceSchema: ObjectSchema<CreateResourceDTO> =
   Joi.object<CreateResourceDTO>({
     title: Joi.string().min(3).max(200).required(),
@@ -37,6 +38,7 @@ export const createResourceSchema: ObjectSchema<CreateResourceDTO> =
     estimatedMinutes: Joi.number().positive().required(),
   });
 
+//UpdateResourceSchema for updating validation
 export const updateResourceSchema: ObjectSchema<UpdateResourceDTO> =
   Joi.object<UpdateResourceDTO>({
     title: Joi.string().min(3).max(200),
@@ -48,6 +50,7 @@ export const updateResourceSchema: ObjectSchema<UpdateResourceDTO> =
     estimatedMinutes: Joi.number().positive(),
   }).min(1);
 
+//CreateResourceOrBulkSchema for creating or bulk validation
 export const createResourceOrBulkSchema = Joi.alternatives().try(
   createResourceSchema,
   Joi.array().items(createResourceSchema).min(1),

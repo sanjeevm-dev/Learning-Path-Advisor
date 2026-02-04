@@ -37,61 +37,50 @@ export default function AdvisorPage() {
   };
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem" }}>
-      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>
-          What do you want to learn today?
-        </h1>
-        <p>
+    <div className="mx-auto max-w-5xl p-8">
+      {/* Header */}
+      <div className="mb-8 text-center">
+        <h1 className="text-2xl font-bold">What do you want to learn today?</h1>
+        <p className="text-gray-600">
           Describe your learning goals, and our AI advisor will curate a
           personalized path.
         </p>
       </div>
 
-      <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
-        <div style={{ flex: "1 1 250px" }}>
-          <div
-            style={{
-              padding: "1rem",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-            }}
-          >
+      <div className="flex flex-wrap gap-8">
+        {/* Form */}
+        <div className="flex-1 min-w-[250px]">
+          <div className="rounded-lg border border-gray-300 p-4">
             <Formik
               initialValues={{ goal: "", maxItems: 4 }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
               {({ isSubmitting, values, setFieldValue }) => (
-                <Form
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
-                  }}
-                >
+                <Form className="flex flex-col gap-4">
                   <div>
-                    <label htmlFor="goal">Learning Goal</label>
+                    <label htmlFor="goal" className="mb-1 block font-medium">
+                      Learning Goal
+                    </label>
                     <Field
                       as="textarea"
                       id="goal"
                       name="goal"
                       placeholder="I want to learn React hooks and state management..."
-                      style={{
-                        width: "100%",
-                        minHeight: "100px",
-                        padding: "0.5rem",
-                      }}
+                      className="w-full min-h-[100px] rounded border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                    <ErrorMessage name="goal">
-                      {(msg) => (
-                        <div style={{ color: "red" }}>{msg}</div>
-                      )}
-                    </ErrorMessage>
+                    <ErrorMessage
+                      name="goal"
+                      component="div"
+                      className="mt-1 text-sm text-red-500"
+                    />
                   </div>
 
                   <div>
-                    <label htmlFor="maxItems">
+                    <label
+                      htmlFor="maxItems"
+                      className="mb-1 block font-medium"
+                    >
                       Number of Resources: <strong>{values.maxItems}</strong>
                     </label>
                     <input
@@ -104,19 +93,19 @@ export default function AdvisorPage() {
                       onChange={(e) =>
                         setFieldValue("maxItems", Number(e.target.value))
                       }
-                      style={{ width: "100%" }}
+                      className="w-full"
                     />
-                    <ErrorMessage name="maxItems">
-                      {(msg) => (
-                        <div style={{ color: "red" }}>{msg}</div>
-                      )}
-                    </ErrorMessage>
+                    <ErrorMessage
+                      name="maxItems"
+                      component="div"
+                      className="mt-1 text-sm text-red-500"
+                    />
                   </div>
 
                   <button
                     type="submit"
-                    disabled={isSubmitting || aiState.loading}
-                    className="px-8 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
+                    disabled={isSubmitting || aiState.loading || !values.goal}
+                    className="rounded-full bg-blue-600 px-8 py-2 text-white transition hover:bg-blue-700 disabled:opacity-50"
                   >
                     {aiState.loading ? "Generating Path..." : "Generate Path"}
                   </button>
@@ -127,74 +116,42 @@ export default function AdvisorPage() {
         </div>
 
         {/* Results */}
-        <div style={{ flex: "2 1 500px" }}>
+        <div className="flex-[2] min-w-[300px]">
           {aiState.loading && (
-            <div style={{ padding: "2rem", textAlign: "center" }}>
-              <div
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  border: "4px solid #ccc",
-                  borderTop: "4px solid #333",
-                  borderRadius: "50%",
-                  margin: "0 auto",
-                  animation: "spin 1s linear infinite",
-                }}
-              />
-              <p>Analyzing your goal...</p>
+            <div className="py-8 text-center">
+              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-gray-700" />
+              <p className="text-gray-600">Analyzing your goal...</p>
             </div>
           )}
 
           {!aiState.loading && !recommendation && (
-            <div
-              style={{
-                padding: "2rem",
-                textAlign: "center",
-                border: "1px dashed #ccc",
-              }}
-            >
+            <div className="border border-dashed border-gray-300 p-8 text-center text-gray-600">
               <p>Enter your goal to generate a custom learning path.</p>
             </div>
           )}
 
           {recommendation && (
             <div>
-              <div
-                style={{
-                  padding: "1rem",
-                  border: "1px solid #0070f3",
-                  borderRadius: "8px",
-                  marginBottom: "1rem",
-                }}
-              >
-                <h2>{recommendation.summary}</h2>
-                <p>{recommendation.explanation}</p>
-                <p>
+              <div className="mb-4 rounded-lg border border-blue-600 p-4">
+                <h2 className="text-lg font-semibold">
+                  {recommendation.summary}
+                </h2>
+                <p className="text-gray-700">{recommendation.explanation}</p>
+                <p className="mt-2">
                   Total Estimated Minutes:{" "}
                   <strong>{recommendation.totalEstimatedMinutes}</strong>
                 </p>
               </div>
 
-              <div>
+              <div className="space-y-4">
                 {recommendation.resources.map((resource) => (
-                  <div key={resource.id} style={{ marginBottom: "1rem" }}>
-                    <ResourceCard resource={resource} compact />
-                  </div>
+                  <ResourceCard key={resource.id} resource={resource} compact />
                 ))}
               </div>
             </div>
           )}
         </div>
       </div>
-
-      <style>
-        {`
-          @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-        `}
-      </style>
     </div>
   );
 }

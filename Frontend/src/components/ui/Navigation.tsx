@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { BookOpen, Sparkles, LayoutDashboard } from "lucide-react";
 
 function Navigation() {
+  // Navigation links
   const navItems = [
     { href: "/", label: "Library", icon: BookOpen },
     { href: "/advisor", label: "AI Advisor", icon: Sparkles },

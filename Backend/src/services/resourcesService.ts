@@ -9,6 +9,7 @@ export interface ResourceFilters {
 }
 
 export class ResourcesService {
+  //Get All with Filters
   static getAll(filters?: ResourceFilters): LearningResource[] {
     let resources = resourceRepository.findAll();
 
@@ -48,6 +49,7 @@ export class ResourcesService {
     return resources;
   }
 
+  //Get by Id
   static getById(id: string): LearningResource {
     const resource = resourceRepository.findById(id);
     if (!resource) {
@@ -62,6 +64,7 @@ export class ResourcesService {
     return resourceRepository.create(data);
   }
 
+  //Update
   static update(
     id: string,
     data: Partial<Omit<LearningResource, "id" | "createdAt">>,
@@ -81,6 +84,7 @@ export class ResourcesService {
     return updated;
   }
 
+  //Delete
   static delete(id: string): void {
     const deleted = resourceRepository.delete(id);
     if (!deleted) {

@@ -7,6 +7,7 @@ interface SchemaValidator {
   options?: ValidationOptions;
 }
 
+// Validate Joi schema
 export const validateJoiSchema = ({
   schema,
   data,

@@ -5,6 +5,7 @@ import NotFound from "./components/pages/not-found";
 import AdminPage from "./components/pages/AdminPage";
 import LibraryPage from "./components/pages/LibraryPage";
 import ResourceDetail from "./components/pages/ResourceDetail";
+import ToastContainer from "./components/ui/ToastContainer";
 import "./App.css";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <ToastContainer />
     </div>
   );
 }

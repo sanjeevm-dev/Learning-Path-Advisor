@@ -3,6 +3,7 @@ import { useResources } from "../hooks/use-resources";
 import { DIFFICULTIES, RESOURCE_TYPES } from "../../types/types";
 import { ResourceCard } from "../ui/ResourceCard";
 
+// Skeleton Loading
 function Skeleton({ className }: { className: string }) {
   return <div className={`bg-gray-200 animate-pulse ${className}`} />;
 }
@@ -25,9 +26,9 @@ export default function LibraryPage() {
   });
 
   return (
-    <div className="space-y-8 pb-12 max-w-7xl mx-auto px-4">
+    <div className="space-y-12 pb-12 max-w-7xl mx-auto px-4">
       {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-3xl bg-blue-50 border border-blue-100 px-6 py-12 text-center">
+      <section className="relative overflow-hidden rounded-3xl bg-blue-50 border border-blue-100 px-6 py-12 mt-6 text-center">
         <h1 className="text-4xl md:text-5xl font-bold mb-2">
           Learning Library
         </h1>
@@ -50,7 +51,7 @@ export default function LibraryPage() {
         </div>
       </section>
 
-      {/* Filters */}
+      {/* Search Bar */}
       <div className="sticky top-4 z-40 bg-white p-4 rounded-xl border shadow-sm flex flex-col md:flex-row gap-4 items-center">
         <input
           type="text"
@@ -59,7 +60,7 @@ export default function LibraryPage() {
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-
+        {/* Filter by type */}
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
@@ -73,6 +74,7 @@ export default function LibraryPage() {
           ))}
         </select>
 
+        {/* Filter by difficulty */}
         <select
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
@@ -85,7 +87,7 @@ export default function LibraryPage() {
             </option>
           ))}
         </select>
-
+        {/* Filter by tag */}
         <input
           type="text"
           placeholder="Filter by tag..."

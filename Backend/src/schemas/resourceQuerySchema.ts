@@ -7,6 +7,7 @@ export interface ResourceQuery {
   tag?: string;
 }
 
+//resourceQuerySchema for query validation
 export const resourceQuerySchema = Joi.object<ResourceQuery>({
   q: Joi.string().trim().min(1).optional(),
 

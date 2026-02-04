@@ -4,6 +4,7 @@ import { AIRecommendRequest } from "../schemas/aiRecommendationSchema";
 import { LearningResource } from "../models/learningResource";
 
 export class AIService {
+  //AI Recommendation Logic with keywords and prioritization
   static recommendLearningPath({ goal, maxItems = 5 }: AIRecommendRequest) {
     const keywords = this.extractKeywords(goal);
 
@@ -66,8 +67,8 @@ export class AIService {
     return goal
       .toLowerCase()
       .replace(/[^\w\s]/g, "") // remove punctuation
-      .split(/\s+/)
-      .filter((k) => k.length > 2 && !stopWords.has(k));
+      .split(/\s+/) // split into words
+      .filter((k) => k.length > 2 && !stopWords.has(k)); // filter short words
   }
 
   // Helper: score a resource
@@ -85,7 +86,7 @@ export class AIService {
     ];
 
     for (const keyword of keywords) {
-      // 🔥 tag matches weighted strongest
+      //  tag matches weighted strongest
       if (resource.tags.some((t) => t.toLowerCase() === keyword)) score += 5;
 
       // title matches
@@ -94,7 +95,7 @@ export class AIService {
       // description matches
       if (resource.description.toLowerCase().includes(keyword)) score += 1;
     }
-
+    // if isBeginner and resource is beginner
     if (isBeginner && resource.difficulty.toLowerCase() === "beginner") {
       score += 2;
     }

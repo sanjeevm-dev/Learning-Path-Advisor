@@ -6,6 +6,7 @@ import {
 } from "../schemas/aiRecommendationSchema";
 import { AIService } from "../services/aiService";
 
+// AI Controller
 export class AIController {
   static async recommendPath(
     req: Request<{}, {}, AIRecommendRequest>,

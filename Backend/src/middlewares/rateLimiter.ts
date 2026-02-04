@@ -2,6 +2,7 @@ import rateLimit from "express-rate-limit";
 import createHttpError from "http-errors";
 import { Request, Response } from "express";
 
+// Global Rate Limiter
 export const globalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,

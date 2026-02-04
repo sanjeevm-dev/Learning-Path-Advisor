@@ -5,11 +5,13 @@ export interface AIRecommendRequest {
   maxItems?: number;
 }
 
+// AI Recommendation Request
 export const aiRecommendSchema = Joi.object<AIRecommendRequest>({
   goal: Joi.string().trim().min(5).required(),
   maxItems: Joi.number().integer().min(1).max(10).default(5),
 });
 
+// AI Recommendation Response
 export interface AIRecommendResponse {
   summary: string;
   resources: {

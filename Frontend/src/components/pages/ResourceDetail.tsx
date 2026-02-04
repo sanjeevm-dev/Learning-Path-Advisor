@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useResource, useDeleteResource } from "../hooks/use-resources";
 import { format } from "date-fns";
+import { Modal } from "../ui/Modal";
+import { ResourceForm } from "../ui/ResourceForm";
+import type { Resource } from "../../types/types";
 
 function Badge({
   children,
@@ -58,6 +61,7 @@ export default function ResourceDetail() {
   const { data: resource, isLoading } = useResource(id);
   const deleteMutation = useDeleteResource();
   const [isEditing, setIsEditing] = useState(false);
+  const [editResource, setEditResource] = useState<Resource | null>(null);
 
   const handleDelete = async () => {
     if (!resource) return;
@@ -89,7 +93,7 @@ export default function ResourceDetail() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto pt-4 pb-20 space-y-6">
+    <div className="max-w-4xl mx-auto pt-4 pb-20 space-y-6 mt-10">
       <Button onClick={() => navigate("/")} className="mb-6">
         ← Back to Library
       </Button>
@@ -125,7 +129,6 @@ export default function ResourceDetail() {
             "MMM d, yyyy",
           )}
         </div>
-        <Button className="ml-auto">Share</Button>
       </div>
 
       {/* Resource Description */}
@@ -147,17 +150,20 @@ export default function ResourceDetail() {
         )}
       </Card>
 
-      {/* Edit Form */}
-      {isEditing && (
-        <Card>
-          <h2 className="font-bold text-xl mb-4">
-            Edit Resource (simple form)
-          </h2>
-          {/* You can insert a simple form here */}
-          <p>Form component goes here</p>
-          <Button onClick={() => setIsEditing(false)}>Close</Button>
-        </Card>
-      )}
+      {/* Edit Modal */}
+
+      <Modal
+        open={!!editResource}
+        onClose={() => setEditResource(null)}
+        title="Edit Resource"
+      >
+        {editResource && (
+          <ResourceForm
+            resource={editResource}
+            onSuccess={() => setEditResource(null)}
+          />
+        )}
+      </Modal>
     </div>
   );
 }

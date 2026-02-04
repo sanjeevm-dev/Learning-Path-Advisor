@@ -22,15 +22,21 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
-
-app.use("/api", apis);
 app.use(globalRateLimiter);
 app.use(errorHandler);
+
+app.use("/api", apis);
 
 app.get("/", (_req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
+// Health check
+app.get("/health", (_req: Request, res: Response) => {
+  res.sendStatus(200).json({ status: "OK" });
+});
+
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

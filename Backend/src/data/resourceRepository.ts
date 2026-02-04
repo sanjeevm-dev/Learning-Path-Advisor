@@ -41,14 +41,17 @@ class ResourceRepository {
     ];
   }
 
+  // Get All
   findAll(): LearningResource[] {
     return [...this.resources];
   }
 
+  // Get by Id
   findById(id: string): LearningResource | undefined {
     return this.resources.find((r) => r.id === id);
   }
 
+  // Create
   create(
     data: Omit<LearningResource, "id" | "createdAt" | "updatedAt">,
   ): LearningResource {
@@ -66,6 +69,7 @@ class ResourceRepository {
     return resource;
   }
 
+  // Update
   replace(id: string, resource: LearningResource): void {
     const index = this.resources.findIndex((r) => r.id === id);
 
@@ -74,6 +78,7 @@ class ResourceRepository {
     }
   }
 
+  // Delete
   delete(id: string): boolean {
     const before = this.resources.length;
     this.resources = this.resources.filter((r) => r.id !== id);

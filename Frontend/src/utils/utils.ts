@@ -1,4 +1,5 @@
-/* ---------- utils ---------- */
+//URL BUILDER
+
 function buildUrl(path: string, params?: Record<string, any>) {
   if (!params) return path;
 
